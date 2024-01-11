@@ -82,10 +82,11 @@ type MatchDetails{
     isFavorite: Boolean
 }
 
-type LiveScores{
+type LiveScores {
     _id: ID!
-    leagueName: String,
+    leagueName: String
     matches: [MatchDetails]
+    date: String
 }
 
 type FavoriteMatches{
@@ -116,6 +117,7 @@ type Event{
 }
 
 type RootQuery {
+    currentOffer: LiveScores
     liveScores: [LiveScores]
     matchDetails(matchId : ID!): MatchDetails
     favoriteMatches(username: String!): FavoriteMatches

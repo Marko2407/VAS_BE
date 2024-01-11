@@ -8,6 +8,23 @@ const Events = require("../../models/matchDetails/events");
 
 const matchResolver = {
   RootQuery: {
+    currentOffer: async () => {
+      try {
+        const today = new Date();
+        const currentDate = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate()
+        );
+        const dateString = currentDate.toISOString().split("T")[0];
+
+        const liveScores = await LiveScores.findOne({ date: dateString });
+        console.log("liveScores", liveScores);
+        return liveScores;
+      } catch (error) {
+        throw error;
+      }
+    },
     liveScores: async () => {
       try {
         const liveScores = await LiveScores.find();
@@ -49,8 +66,18 @@ const matchResolver = {
   RootMutation: {
     createLiveScores: async (_p, args, _c, _i) => {
       try {
+        const today = new Date();
+        const currentDate = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate()
+        )
+          .toISOString()
+          .split("T")[0];
+
         let liveScores = await LiveScores.findOne({
           leagueName: args.input.leagueName,
+          date: currentDate,
         });
 
         if (liveScores) {
@@ -59,6 +86,7 @@ const matchResolver = {
           liveScores = new LiveScores({
             leagueName: args.input.leagueName,
             matches: args.input.matches,
+            date: currentDate,
           });
         }
 
@@ -155,31 +183,29 @@ const matchResolver = {
     addToFavorite: async (_p, args, _c, _i) => {
       try {
         const { username, matchID } = args;
-        // Find the document for the given username or create a new one if it doesn't exist
         let favorite = await FavoriteMatches.findOneAndUpdate(
           { username },
           { $setOnInsert: { username, match: [] } },
           { new: true, upsert: true }
         );
 
-        // Check if matchID is already in the favorites
         const index = favorite.match.findIndex((id) => id.equals(matchID));
         if (index > -1) {
-          // Match is already a favorite, remove it
           favorite.match.splice(index, 1);
         } else {
-          // Match is not a favorite, add it
           favorite.match.push(matchID);
         }
 
-        // Save the updated document
-        const matchDetailsPromises = favorite.match.map(async (matchId) => {
-          return matches(matchId);
-        });
-
         await favorite.save();
 
-        return favorite;
+        const matchDetails = await Promise.all(
+          favorite.match.map((matchId) => matches(matchId))
+        );
+
+        return {
+          username: favorite.username,
+          match: matchDetails.filter((md) => md !== null), // Filter out any null results
+        };
       } catch (error) {
         console.error(error);
         throw new Error("Error updating favorite matches:", error);

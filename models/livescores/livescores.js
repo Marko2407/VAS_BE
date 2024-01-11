@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const liveScoresSchema = new Schema({
+  date: {
+    type: Date,
+    required: false,
+    default: () => {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    },
+  },
   leagueName: {
     type: String,
     required: true,
