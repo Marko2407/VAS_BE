@@ -5,6 +5,7 @@ const MatchPreview = require("../../models/matchDetails/matchPreview");
 const MatchPreviewContent = require("../../models/matchDetails/previewContent");
 const Event = require("../../models/matchDetails/event");
 const Events = require("../../models/matchDetails/events");
+const livescores = require("../../models/livescores/livescores");
 
 const matchResolver = {
   RootQuery: {
@@ -20,7 +21,9 @@ const matchResolver = {
 
         const liveScores = await LiveScores.findOne({ date: dateString });
         console.log("liveScores", liveScores);
-        return liveScores;
+        const tr = await transformCurrentOffer(liveScores);
+        console.log("liveScores", tr);
+        return tr;
       } catch (error) {
         throw error;
       }
@@ -226,7 +229,23 @@ const transformLivescoreMatches = async (livescore) => {
 
   return {
     _id: livescore._id,
-    league: livescore.leagueName,
+    leagueName: livescore.leagueName,
+    matches: matchDetails,
+  };
+};
+
+const transformCurrentOffer = async (offer) => {
+  console.log("offer", offer);
+  const matchDetailsPromises = offer.matches.map(async (matchId) => {
+    return matches(matchId);
+  });
+
+  const matchDetails = await Promise.all(matchDetailsPromises);
+
+  return {
+    date: offer.date,
+    _id: offer._id,
+    leagueName: offer.leagueName,
     matches: matchDetails,
   };
 };
