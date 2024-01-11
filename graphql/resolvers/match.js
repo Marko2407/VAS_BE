@@ -37,7 +37,8 @@ const matchResolver = {
     },
     matchDetails: async (_p, { matchId }, _c, _i) => {
       try {
-        const result = await MatchDetails.findById(matchId);
+        const result = matches(matchId)
+
         return result;
       } catch (error) {
         throw error;
