@@ -19,6 +19,7 @@ const matchResolver = {
         );
         const dateString = currentDate.toISOString().split("T")[0];
 
+        console.log("current date", dateString);
         const liveScores = await LiveScores.findOne({ date: dateString });
         console.log("liveScores", liveScores);
         const tr = await transformCurrentOffer(liveScores);
