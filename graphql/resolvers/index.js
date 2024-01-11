@@ -1,5 +1,5 @@
-const authResolver = require("./auth");
+const matchResolver = require("./match");
 
-const rootResolver = authResolver;
+const rootResolver = matchResolver;
 
 module.exports = rootResolver;

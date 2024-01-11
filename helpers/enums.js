@@ -1,0 +1,18 @@
+exports.status = {
+  LIVE: "LIVE",
+  FINISHED: "FINISHED",
+  HALFTIME: "HALFTIME",
+  UNKNOWN: "UNKNOWN",
+  PREMATCH: "PREMATCH",
+};
+
+exports.events = {
+  RED_CARD: "RED_CARD",
+  YELLOW_CARD: "YELLOW_CARD",
+  SUBS: "SUBS",
+  PENAL: "PENAL",
+  CORNERS: "CORNERS",
+  UNKNOWN: "UNKNOWN",
+  HOME: "HOME",
+  AWAY: "AWAY",
+};
