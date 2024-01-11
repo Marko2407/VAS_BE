@@ -117,7 +117,7 @@ type Event{
 }
 
 type RootQuery {
-    currentOffer: LiveScores
+    currentOffer: [LiveScores]
     liveScores: [LiveScores]
     matchDetails(matchId : ID!): MatchDetails
     favoriteMatches(username: String!): FavoriteMatches

@@ -20,11 +20,9 @@ const matchResolver = {
         const dateString = currentDate.toISOString().split("T")[0];
 
         console.log("current date", dateString);
-        const liveScores = await LiveScores.findOne({ date: dateString });
+        const liveScores = await LiveScores.find({ date: dateString });
         console.log("liveScores", liveScores);
-        const tr = await transformCurrentOffer(liveScores);
-        console.log("liveScores", tr);
-        return tr;
+        return Promise.all(liveScores.map(transformCurrentOffer));
       } catch (error) {
         throw error;
       }
