@@ -37,7 +37,7 @@ const matchResolver = {
     },
     matchDetails: async (_p, { matchId }, _c, _i) => {
       try {
-        const result = matches(matchId)
+        const result = matches(matchId);
 
         return result;
       } catch (error) {
@@ -186,6 +186,14 @@ const matchResolver = {
     addToFavorite: async (_p, args, _c, _i) => {
       try {
         const { username, matchID } = args;
+
+        const movies = await MatchDetails.findById(matchID);
+
+        if (movies) {
+          movies.isFavorite = !movies.isFavorite;
+          await movies.save();
+        }
+
         let favorite = await FavoriteMatches.findOneAndUpdate(
           { username },
           { $setOnInsert: { username, match: [] } },

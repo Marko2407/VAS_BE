@@ -72,7 +72,7 @@ type MatchDetails{
     status: Status!
     minute: Int!
     winner: String,
-    events: Events
+events: Events
     goals: String
     excitementRating: String
     oddsHome: Float,
