@@ -52,7 +52,7 @@ const matchResolver = {
 
         console.log("fac", favoriteMatch);
 
-        if (favoriteMatc == null) {
+        if (!favoriteMatch == null) {
           throw new Error("No favorite matches found for this user");
         }
 
